@@ -15,11 +15,7 @@ except:
 import argparse
 import os
 import time
-## solve tkinter-tclerror-no-display-name-and-no-display-environment-variable
-import matplotlib
-matplotlib.use('Agg')
-##
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
 from utils import dataset_reader
@@ -43,20 +39,20 @@ def update_plot():
 def start_playback():
     global timestamp, timestamp_min, timestamp_max, playback_stopped
     playback_stopped = False
-    matplotlib.pyplot.ion()
+    plt.ion()
     while timestamp < timestamp_max and not playback_stopped:
         timestamp += dataset_types.DELTA_TIMESTAMP_MS
         start_time = time.time()
         update_plot()
         end_time = time.time()
         diff_time = end_time - start_time
-        matplotlib.pyplot.pause(max(0.001, dataset_types.DELTA_TIMESTAMP_MS / 1000. - diff_time))
-    matplotlib.pyplot.ioff()
+        plt.pause(max(0.001, dataset_types.DELTA_TIMESTAMP_MS / 1000. - diff_time))
+    plt.ioff()
 
 
 class FrameControlButton(object):
     def __init__(self, position, label):
-        self.ax = matplotlib.pyplot.axes(position)
+        self.ax = plt.axes(position)
         self.label = label
         self.button = Button(self.ax, label)
         self.button.on_clicked(self.on_click)
@@ -122,7 +118,7 @@ if __name__ == "__main__":
         raise IOError(error_string)
 
     # create a figure
-    fig, axes = matplotlib.pyplot.subplots(1, 1)
+    fig, axes = plt.subplots(1, 1)
     fig.canvas.set_window_title("Interaction Dataset Visualization")
 
     # load and draw the lanelet2 map, either with or without the lanelet2 library
@@ -167,4 +163,4 @@ if __name__ == "__main__":
     title_text = fig.suptitle("")
     playback_stopped = True
     update_plot()
-    matplotlib.pyplot.show()
+    plt.show()
